@@ -1,1 +1,1 @@
-export {getStream} from "../../providers/hanime/stream";
+export const getStream=async()=>[];

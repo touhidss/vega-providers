@@ -1,1 +1,13 @@
-"use strict";var __defProp=Object.defineProperty,__getOwnPropDesc=Object.getOwnPropertyDescriptor,__getOwnPropNames=Object.getOwnPropertyNames,__hasOwnProp=Object.prototype.hasOwnProperty,__export=(target,all)=>{for(var name in all)__defProp(target,name,{get:all[name],enumerable:!0})},__copyProps=(to,from,except,desc)=>{if(from&&"object"==typeof from||"function"==typeof from)for(let key of __getOwnPropNames(from))__hasOwnProp.call(to,key)||key===except||__defProp(to,key,{get:()=>from[key],enumerable:!(desc=__getOwnPropDesc(from,key))||desc.enumerable});return to},__toCommonJS=mod=>__copyProps(__defProp({},"__esModule",{value:!0}),mod),catalog_exports={};__export(catalog_exports,{catalog:()=>catalog,genres:()=>genres});var catalog=[{title:"Trending",filter:"/trending"},{title:"Movies",filter:"/recent-movies"},{title:"TV Shows",filter:"/recent-shows"}],genres=[];exports.catalog=catalog,exports.genres=genres;
+"use strict";
+Object.defineProperty(exports,"__esModule",{value:true});
+exports.catalog=exports.genres=void 0;
+
+exports.catalog=[
+{title:"Trending",filter:"trending"},
+{title:"Recent Uploads",filter:"recent_uploads"},
+{title:"New Releases",filter:"new_releases"},
+{title:"Recent Images",filter:"recent_images"},
+{title:"Random",filter:"random"}
+];
+
+exports.genres=[];

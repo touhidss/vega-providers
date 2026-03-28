@@ -1,1 +1,1 @@
-export const catalog=[{title:"Recent",filter:""}];export const genres=[];
+export const catalog=[{title:"Recent",filter:"/"}];export const genres=[];

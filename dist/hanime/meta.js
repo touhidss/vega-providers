@@ -1,1 +1,1 @@
-export {getMeta} from "../../providers/hanime/meta";
+export const getMeta=async()=>({title:"Hanime",synopsis:"",image:"",imdbId:"",type:"movie",linkList:[]});

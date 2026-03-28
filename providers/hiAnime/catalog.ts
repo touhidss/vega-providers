@@ -1,19 +1,19 @@
 export const catalog = [
   {
     title: "Recent",
-    filter: "/anime/zoro/recent-episodes",
+    filter: "/recently-updated",
   },
   {
     title: "Top Airing",
-    filter: "/anime/zoro/top-airing",
+    filter: "/top-airing",
   },
   {
     title: "Most Popular",
-    filter: "/anime/zoro/most-popular",
+    filter: "/most-popular",
   },
   {
-    title: "Most Favorited",
-    filter: "/anime/zoro/most-favorite",
+    title: "Movies",
+    filter: "/movie",
   },
 ];
 

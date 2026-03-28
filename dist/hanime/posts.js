@@ -9,29 +9,29 @@ export const getPosts = async function ({
     const { axios } = providerContext;
 
     const res = await axios.get(
-      `https://members.hanime.tv/api/v8/browse?order=${filter}`,
-      {
-        signal,
-        headers: {
-          Referer: "https://hanime.tv/",
-          Origin: "https://hanime.tv",
-          "User-Agent": "Mozilla/5.0",
-        },
-      }
+      `https://hanime.tv/videos/hentai?order=${filter}`,
+      { signal }
     );
 
-    const data = res.data?.hentai_videos || [];
-    const catalog: Post[] = [];
+    const html = res.data;
 
-    data.forEach((e: any) => {
-      catalog.push({
-        title: e.name,
-        link: e.slug,
-        image: e.cover_url,
+    const matches = [
+      ...html.matchAll(
+        /<a class="overlay" href="\/videos\/hentai\/(.*?)".*?<img src="(.*?)".*?alt="(.*?)"/gs
+      ),
+    ];
+
+    const posts: Post[] = [];
+
+    matches.forEach((m: any) => {
+      posts.push({
+        title: m[3],
+        link: m[1],
+        image: m[2],
       });
     });
 
-    return catalog;
+    return posts;
   } catch {
     return [];
   }
@@ -46,29 +46,29 @@ export const getSearchPosts = async function ({
     const { axios } = providerContext;
 
     const res = await axios.get(
-      `https://members.hanime.tv/api/v8/search?q=${encodeURIComponent(searchQuery)}`,
-      {
-        signal,
-        headers: {
-          Referer: "https://hanime.tv/",
-          Origin: "https://hanime.tv",
-          "User-Agent": "Mozilla/5.0",
-        },
-      }
+      `https://hanime.tv/search?query=${searchQuery}`,
+      { signal }
     );
 
-    const data = res.data?.hentai_videos || [];
-    const catalog: Post[] = [];
+    const html = res.data;
 
-    data.forEach((e: any) => {
-      catalog.push({
-        title: e.name,
-        link: e.slug,
-        image: e.cover_url,
+    const matches = [
+      ...html.matchAll(
+        /<a class="overlay" href="\/videos\/hentai\/(.*?)".*?<img src="(.*?)".*?alt="(.*?)"/gs
+      ),
+    ];
+
+    const posts: Post[] = [];
+
+    matches.forEach((m: any) => {
+      posts.push({
+        title: m[3],
+        link: m[1],
+        image: m[2],
       });
     });
 
-    return catalog;
+    return posts;
   } catch {
     return [];
   }

@@ -1,8 +1,8 @@
 export const catalog = [
   {
-    title: "Recent",
-    filter: "/"
+    title: "All",
+    filter: ""
   }
 ];
 
-export const genres = [];
+export const genres: { title: string; filter: string }[] = [];

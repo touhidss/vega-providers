@@ -1,1 +1,1 @@
-dist/hanime/posts.js
+export const getPosts=async()=>[];

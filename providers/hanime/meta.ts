@@ -1,47 +1,42 @@
 import { Info, Link, ProviderContext } from "../types";
 
 export const getMeta = async function ({
-  link: id,
+  link,
   providerContext,
-}: {
-  link: string;
-  providerContext: ProviderContext;
-}): Promise<Info> {
+}: any): Promise<Info> {
   try {
     const { axios } = providerContext;
 
-    const res = await axios.get(`https://hanime.tv/api/v8/video?id=${id}`);
-    const data = res.data;
+    const res = await axios.get(
+      `https://hanime.tv/videos/hentai/${link}`
+    );
 
-    const meta = {
-      title: data.name,
-      synopsis: data.description,
-      image: data.cover_url,
-      imdbId: "",
-      type: "movie",
-    };
+    const html = res.data;
 
-    const links: Link["directLinks"] = [];
+    const json = html.match(/window\.__NUXT__=(.*?);<\/script>/)?.[1];
+    const data = JSON.parse(json);
 
-    data.videos_manifest.servers.forEach((server: any) => {
-      server.streams.forEach((stream: any) => {
-        links.push({
-          title: `${stream.height}p`,
-          link: stream.url,
-        });
-      });
-    });
+    const video = data.state.video;
 
     return {
-      ...meta,
+      title: video.name,
+      synopsis: video.description,
+      image: video.cover_url,
+      imdbId: "",
+      type: "movie",
       linkList: [
         {
-          title: meta.title,
-          directLinks: links,
+          title: video.name,
+          directLinks: [
+            {
+              title: "Play",
+              link: link,
+            },
+          ],
         },
       ],
     };
-  } catch (err) {
+  } catch {
     return {
       title: "",
       synopsis: "",

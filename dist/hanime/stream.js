@@ -2,28 +2,33 @@
 Object.defineProperty(exports,"__esModule",{value:true});
 exports.getStream=void 0;
 
-exports.getStream=async({link:id,providerContext})=>{
+exports.getStream=async({link,providerContext})=>{
 try{
 const{axios}=providerContext;
 
-const res=await axios.get(`https://hanime.tv/api/v8/video?id=${id}`);
-const data=res.data;
+const res=await axios.get(`https://hanime.tv/videos/hentai/${link}`);
+const html=res.data;
 
-const streamLinks=[];
+const json=html.match(/window\.__NUXT__=(.*?);<\/script>/)[1];
+const data=JSON.parse(json);
 
-data?.videos_manifest?.servers?.forEach(server=>{
-server.streams.forEach(stream=>{
-streamLinks.push({
-server:`Hanime-${stream.height}p`,
-link:stream.url,
+const streams=data.state.video.videos_manifest.servers;
+
+const out=[];
+
+streams.forEach(s=>{
+s.streams.forEach(q=>{
+out.push({
+server:"Hanime",
+link:q.url,
 type:"mp4",
 subtitles:[]
 });
 });
 });
 
-return streamLinks;
+return out;
 }catch{
-return [];
+return[];
 }
 };

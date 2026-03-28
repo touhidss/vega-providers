@@ -8,69 +8,43 @@ export const getMeta = async function ({
   providerContext: ProviderContext;
 }): Promise<Info> {
   try {
-    const { getBaseUrl, axios } = providerContext;
-    const baseUrl = await getBaseUrl("consumet");
-    const url = `${baseUrl}/anime/zoro/info?id=` + link;
-    const res = await axios.get(url);
-    const data = res.data;
-    const meta = {
-      title: data.title,
-      synopsis: data.description,
-      image: data.image,
-      tags: [
-        data?.type,
-        data?.subOrDub === "both" ? "Sub And Dub" : data?.subOrDub,
-      ],
-      imdbId: "",
-      type: data.episodes.length > 0 ? "series" : "movie",
-    };
-    const linkList: Link[] = [];
-    const subLinks: Link["directLinks"] = [];
-    data.episodes.forEach((episode: any) => {
-      if (!episode?.isSubbed) {
-        return;
-      }
-      const title =
-        "Episode " + episode.number + (episode?.isFiller ? " (Filler)" : "");
-      const link = episode.id + "$sub";
-      if (link && title) {
-        subLinks.push({
-          title,
-          link,
-        });
-      }
-    });
-    linkList.push({
-      title: meta.title + " (Sub)",
-      directLinks: subLinks,
-    });
-    if (data?.subOrDub === "both") {
-      const dubLinks: Link["directLinks"] = [];
-      data.episodes.forEach((episode: any) => {
-        if (!episode?.isDubbed) {
-          return;
-        }
-        const title =
-          "Episode " + episode.number + (episode?.isFiller ? " (Filler)" : "");
-        const link = episode.id + "$dub";
-        if (link && title) {
-          dubLinks.push({
-            title,
-            link,
-          });
-        }
-      });
-      linkList.push({
-        title: meta.title + " (Dub)",
-        directLinks: dubLinks,
-      });
-    }
+    const { axios } = providerContext;
+
+    const res = await axios.get(`https://hianime.to/${link}`);
+    const html = res.data;
+
+    const title =
+      html.match(/<h2 class="film-name.*?>(.*?)<\/h2>/)?.[1]?.trim() || "";
+
+    const image =
+      html.match(/<img class="film-poster-img" src="(.*?)"/)?.[1] || "";
+
+    const synopsis =
+      html.match(/<div class="film-description.*?>(.*?)<\/div>/)?.[1] || "";
+
+    const episodeMatches = [
+      ...html.matchAll(/data-id="(.*?)".*?data-number="(.*?)"/g),
+    ];
+
+    const links: Link["directLinks"] = episodeMatches.map((ep: any) => ({
+      title: `Episode ${ep[2]}`,
+      link: ep[1],
+    }));
+
     return {
-      ...meta,
-      linkList: linkList,
+      title,
+      synopsis,
+      image,
+      imdbId: "",
+      type: "series",
+      linkList: [
+        {
+          title,
+          directLinks: links,
+        },
+      ],
     };
   } catch (err) {
-    console.error(err);
     return {
       title: "",
       synopsis: "",

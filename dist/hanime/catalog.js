@@ -1,7 +1,7 @@
 export const catalog = [
   {
-    title: "Recent",
-    filter: "/"
+    title: "All",
+    filter: ""
   }
 ];
 

@@ -14,29 +14,30 @@ export const getPosts = async function ({
   try {
     const { axios } = providerContext;
 
+    const order =
+      filter === "/recent-movies" ? "latest" :
+      filter === "/recent-shows" ? "popular" :
+      "trending";
+
     const res = await axios.get(
-      `https://hanime.tv/api/v8/browse`,
+      `https://hanime.tv/api/v8/browse?page=0&order=${order}`,
       { signal }
     );
 
-    const data = res.data?.results || res.data;
-    const catalog: Post[] = [];
+    const data = res.data?.hentai_videos || [];
+    const out: Post[] = [];
 
-    data?.map((element: any) => {
-      const title = element.name;
-      const link = element.slug;
-      const image = element.cover_url;
-
-      if (title && link && image) {
-        catalog.push({
-          title,
-          link,
-          image,
+    data.forEach((e: any) => {
+      if (e?.name && e?.slug && e?.cover_url) {
+        out.push({
+          title: e.name,
+          link: e.slug,
+          image: e.cover_url,
         });
       }
     });
 
-    return catalog;
+    return out;
   } catch {
     return [];
   }
@@ -57,28 +58,24 @@ export const getSearchPosts = async function ({
     const { axios } = providerContext;
 
     const res = await axios.get(
-      `https://hanime.tv/api/v8/search?q=${searchQuery}`,
+      `https://hanime.tv/api/v8/search?q=${encodeURIComponent(searchQuery)}`,
       { signal }
     );
 
-    const data = res.data?.results || res.data;
-    const catalog: Post[] = [];
+    const data = res.data?.hentai_videos || [];
+    const out: Post[] = [];
 
-    data?.map((element: any) => {
-      const title = element.name;
-      const link = element.slug;
-      const image = element.cover_url;
-
-      if (title && link && image) {
-        catalog.push({
-          title,
-          link,
-          image,
+    data.forEach((e: any) => {
+      if (e?.name && e?.slug && e?.cover_url) {
+        out.push({
+          title: e.name,
+          link: e.slug,
+          image: e.cover_url,
         });
       }
     });
 
-    return catalog;
+    return out;
   } catch {
     return [];
   }
